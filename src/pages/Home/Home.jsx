@@ -1,7 +1,15 @@
+import PopularMenu from "../PopularMenu/PopularMenu";
+import Banner from "./Banner";
+import Category from "./Category";
+import MiniBanner from "./MiniBanner";
+
 const Home = () => {
   return (
     <div>
-      <h1>This is home</h1>
+      <Banner></Banner>
+      <Category></Category>
+      <MiniBanner></MiniBanner>
+      <PopularMenu></PopularMenu>
     </div>
   );
 };
