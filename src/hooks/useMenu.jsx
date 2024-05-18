@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 const useMenu = () => {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log(menus);
+  // console.log(menus);
   useEffect(() => {
-    fetch("menu.json")
+    fetch("http://localhost:5000/menu")
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);

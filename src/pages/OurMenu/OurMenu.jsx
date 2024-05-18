@@ -37,7 +37,7 @@ const OurMenu = () => {
       <br />
       <br />
       <br />
-      <MenuCategory items={desserts}></MenuCategory>
+      <MenuCategory category="dessert" items={desserts}></MenuCategory>
       <Cover
         banner={banner1}
         title={"PIZZA"}
@@ -48,7 +48,7 @@ const OurMenu = () => {
       <br />
       <br />
       <br />
-      <MenuCategory items={pizzas}></MenuCategory>
+      <MenuCategory category="pizza" items={pizzas}></MenuCategory>
       <Cover
         banner={banner1}
         title={"SALADS"}
@@ -59,18 +59,7 @@ const OurMenu = () => {
       <br />
       <br />
       <br />
-      <MenuCategory items={salads}></MenuCategory>
-      <Cover
-        banner={banner1}
-        title={"DESSERTS"}
-        details={
-          "Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-        }
-      ></Cover>
-      <br />
-      <br />
-      <br />
-      <MenuCategory items={salads}></MenuCategory>
+      <MenuCategory category="salad" items={salads}></MenuCategory>
       <Cover
         banner={banner1}
         title={"SOUPS"}
@@ -81,7 +70,7 @@ const OurMenu = () => {
       <br />
       <br />
       <br />
-      <MenuCategory items={soups}></MenuCategory>
+      <MenuCategory category="soup" items={soups}></MenuCategory>
     </div>
   );
 };
