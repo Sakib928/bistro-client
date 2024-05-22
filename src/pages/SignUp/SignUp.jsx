@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet-async";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { createUser, updateUserProfile } = useContext(AuthContext);
 
   const {
     register,
@@ -17,10 +18,32 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data.email);
+    console.log({ data });
     createUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
+        updateUserProfile(data.name, data.photoURL);
+        Swal.fire({
+          title: "Successfully Logged In",
+          showClass: {
+            popup: `
+        animate__animated
+        animate__fadeInUp
+        animate__faster
+      `,
+          },
+          hideClass: {
+            popup: `
+        animate__animated
+        animate__fadeOutDown
+        animate__faster
+      `,
+          },
+        }).then((res) => {
+          if (res.isConfirmed) {
+            navigate("/");
+          }
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -52,6 +75,22 @@ const SignUp = () => {
                   type="text"
                   name="name"
                   placeholder="name"
+                  className="input input-bordered"
+                  // required
+                />
+                {errors.name && (
+                  <p className="text-red-600">This field is required</p>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo URL</span>
+                </label>
+                <input
+                  {...register("photoURL", { required: true })}
+                  type="text"
+                  name="photoURL"
+                  placeholder="photoURL"
                   className="input input-bordered"
                   // required
                 />
@@ -133,7 +172,7 @@ const SignUp = () => {
                   type="submit"
                   className="btn btn-primary"
                 >
-                  Login
+                  Sign Up
                 </button>
               </div>
               <p>

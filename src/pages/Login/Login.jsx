@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   loadCaptchaEnginge,
   LoadCanvasTemplate,
@@ -11,6 +11,9 @@ const Login = () => {
   const { logIn } = useContext(AuthContext);
   const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  console.log(location.state);
   const handleLogin = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -38,7 +41,7 @@ const Login = () => {
           },
         }).then((res) => {
           if (res.isConfirmed) {
-            navigate("/");
+            navigate(from, { replace: true });
           }
         });
       })
