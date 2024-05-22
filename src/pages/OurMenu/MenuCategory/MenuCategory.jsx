@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import MenuItem from "../../../components/MenuItem/MenuItem";
 
 const MenuCategory = ({ category, items }) => {
-  console.log(category);
+  // console.log(category);
   return (
     <div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -13,15 +13,15 @@ const Order = () => {
   const { category } = useParams();
   const initialIndex = categories.indexOf(category);
   const [tabIndex, setTabIndex] = useState(initialIndex);
-  console.log(category);
+  // console.log(category);
   const [menus] = useMenu();
-  console.log(menus);
+  // console.log(menus);
   const dessert = menus.filter((menu) => menu.category === "dessert");
   const soup = menus.filter((menu) => menu.category === "soup");
   const salad = menus.filter((menu) => menu.category === "salad");
   const pizza = menus.filter((menu) => menu.category === "pizza");
   const drinks = menus.filter((menu) => menu.category === "drinks");
-  console.log(soup);
+  // console.log(soup);
 
   return (
     <div>
