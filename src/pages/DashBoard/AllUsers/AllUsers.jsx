@@ -1,12 +1,18 @@
-import { FaTrash } from "react-icons/fa6";
-import useCart from "../../hooks/useCart";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { FaTrash, FaUsers } from "react-icons/fa6";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-const Cart = () => {
-  const [cart, refetch] = useCart();
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
+  const { data, refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/users");
+      return res.data;
+    },
+  });
+
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -19,7 +25,7 @@ const Cart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(_id);
-        axiosSecure.delete(`/carts/${_id}`).then((res) => {
+        axiosSecure.delete(`/users/${_id}`).then((res) => {
           if (res.data.deletedCount) {
             refetch();
             Swal.fire({
@@ -35,46 +41,45 @@ const Cart = () => {
   return (
     <div>
       <div className="flex justify-evenly items-center">
-        <h1 className="text-6xl"> Items : {cart.length}</h1>
-        <h1 className="text-6xl"> Total Price : {totalPrice.toFixed(2)}</h1>
-        <button className="btn btn-primary">pay</button>
+        <h1 className="text-6xl"> All Users </h1>
+        <h1 className="text-6xl"> Total Users : {data.length}</h1>
       </div>
-
       <div className="overflow-x-auto mt-8">
         <table className="table">
           {/* head */}
           <thead>
             <tr>
               <th>#</th>
-              <th>Image</th>
               <th>Name</th>
-              <th>Price</th>
+              <th>Email</th>
+              <th>Role</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {cart.map((item, idx) => {
+            {data.map((item, idx) => {
               return (
                 <tr key={item._id}>
                   <td>{idx + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img
-                            src={item.image}
-                            alt="Avatar Tailwind CSS Component"
-                          />
-                        </div>
+                        <h1>{item.name}</h1>
                       </div>
                     </div>
                   </td>
-                  <td>{item.name}</td>
-                  <td>${item.price}</td>
+                  <td>{item.email}</td>
+                  <td>
+                    <button className="btn btn-sm text-red-500">
+                      <FaUsers></FaUsers>
+                    </button>
+                  </td>
                   <th>
                     <button
-                      onClick={() => handleDelete(item._id)}
-                      className="btn btn-ghost btn-xs text-red-500"
+                      onClick={() => {
+                        handleDelete(item._id);
+                      }}
+                      className="btn btn-sm text-red-500"
                     >
                       <FaTrash></FaTrash>
                     </button>
@@ -89,4 +94,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default AllUsers;

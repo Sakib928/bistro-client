@@ -7,6 +7,7 @@ import {
 } from "react-simple-captcha";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../providers/AuthProvider";
+import SocialLogin from "../../components/Social/SocialLogin";
 const Login = () => {
   const { logIn } = useContext(AuthContext);
   const [disabled, setDisabled] = useState(true);
@@ -114,10 +115,6 @@ const Login = () => {
                 required
               />
             </div>
-            {/* <button className="btn-outline btn-xs font-bold">
-              Validate captcha
-            </button> */}
-
             <div className="form-control mt-6">
               <button
                 disabled={disabled}
@@ -127,6 +124,7 @@ const Login = () => {
                 Login
               </button>
             </div>
+            <SocialLogin></SocialLogin>
             <p>
               New here ?{" "}
               <Link to={"/signup"}>

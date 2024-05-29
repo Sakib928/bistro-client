@@ -4,8 +4,11 @@ import { Helmet } from "react-helmet-async";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../components/Social/SocialLogin";
 
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const { createUser, updateUserProfile } = useContext(AuthContext);
 
@@ -22,7 +25,17 @@ const SignUp = () => {
     createUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
-        updateUserProfile(data.name, data.photoURL);
+        updateUserProfile(data.name, data.photoURL).then(() => {
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+          };
+          axiosPublic.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              reset();
+            }
+          });
+        });
         Swal.fire({
           title: "Successfully Logged In",
           showClass: {
@@ -48,7 +61,6 @@ const SignUp = () => {
       .catch((err) => {
         console.log(err);
       });
-    reset();
   };
 
   //   console.log(register);
@@ -174,6 +186,7 @@ const SignUp = () => {
                 >
                   Sign Up
                 </button>
+                <SocialLogin />
               </div>
               <p>
                 Have an account ?{" "}

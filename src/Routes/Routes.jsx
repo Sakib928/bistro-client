@@ -7,6 +7,8 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import DashBoard from "../Layout/DashBoard";
 import Cart from "../pages/DashBoard/Cart";
+import PrivateRoute from "./PrivateRoute";
+import AllUsers from "../pages/DashBoard/AllUsers/AllUsers";
 // import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -37,12 +39,26 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <DashBoard></DashBoard>,
+        element: (
+          <PrivateRoute>
+            <DashBoard></DashBoard>
+          </PrivateRoute>
+        ),
         errorElement: <h1>something went wrong</h1>,
         children: [
           {
             path: "cart",
             element: <Cart></Cart>,
+          },
+          //  admin routes
+
+          {
+            path: "allUsers",
+            element: <AllUsers />,
+          },
+          {
+            path: "adminHome",
+            element: <h1>hfsdh</h1>,
           },
         ],
       },
