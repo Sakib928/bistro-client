@@ -1,8 +1,9 @@
-import toast, { Toaster } from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useCart from "../../hooks/useCart";
+// import { useEffect } from "react";
 
 const FoodCard = ({ item }) => {
   const { name, recipe, price, image, _id } = item;
@@ -10,6 +11,8 @@ const FoodCard = ({ item }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const [, refetch] = useCart();
+
   // console.log(user);
   const handleAddToCart = () => {
     if (user && user.email) {
@@ -22,9 +25,16 @@ const FoodCard = ({ item }) => {
         price,
       };
       axiosSecure.post("/carts", cartItem).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.insertedId) {
-          toast.success("Item added to the cart");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `${name} has been added`,
+            showConfirmButton: true,
+            timer: 1500,
+          });
+          refetch();
         }
       });
     } else {
@@ -43,9 +53,9 @@ const FoodCard = ({ item }) => {
       });
     }
   };
+  // useEffect(() => {}, []);
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
-      <Toaster />
       <figure>
         <img src={image} alt="Shoes" />
       </figure>

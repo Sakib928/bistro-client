@@ -3,15 +3,18 @@ import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 import { FaCartShopping } from "react-icons/fa6";
 import useCart from "../../hooks/useCart";
+import toast, { Toaster } from "react-hot-toast";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
-  const cart = useCart();
+  const [cart] = useCart();
   const handleLogout = () => {
-    logOut();
+    logOut().then(() => {
+      toast.success("logged out successfully");
+    });
   };
   const navOptions = (
-    <div className="flex items-center">
+    <div className="flex items-center navigation">
       <li>
         <NavLink to={"/"}>Home</NavLink>
       </li>
@@ -22,6 +25,15 @@ const Navbar = () => {
         <NavLink to={"/order/salad"}>Order Food</NavLink>
       </li>
       <li>
+        <NavLink to={"/dashboard"}>
+          {" "}
+          <button className="flex gap-3">
+            <FaCartShopping className="text-xl font-bold" />
+            <div className="badge badge-secondary ">{cart.length}</div>
+          </button>
+        </NavLink>
+      </li>
+      <li>
         {user ? (
           <button className="btn btn-ghost" onClick={handleLogout}>
             Log Out
@@ -30,19 +42,11 @@ const Navbar = () => {
           <NavLink to={"/login"}>Log In</NavLink>
         )}
       </li>
-      <li>
-        <NavLink to={"/"}>
-          {" "}
-          <button className="flex gap-3">
-            <FaCartShopping className="text-xl font-bold" />
-            <div className="badge badge-secondary ">{cart.length}</div>
-          </button>
-        </NavLink>
-      </li>
     </div>
   );
   return (
     <div>
+      <Toaster />
       <div className="navbar bg-black text-white max-w-screen-xl bg-opacity-30 fixed z-10">
         <div className="navbar-start">
           <div className="dropdown">
