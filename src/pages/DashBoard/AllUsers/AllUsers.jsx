@@ -2,13 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FaTrash, FaUsers } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import toast, { Toaster } from "react-hot-toast";
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
-  const { data, refetch } = useQuery({
+  const { data: users = [], refetch } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users");
+      const res = await axiosSecure.get("/users", {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("access-token")}`,
+        },
+      });
       return res.data;
     },
   });
@@ -38,11 +43,22 @@ const AllUsers = () => {
       }
     });
   };
+
+  const handleMakeAdmin = (_id) => {
+    axiosSecure.patch(`/users/admin/${_id}`).then((res) => {
+      console.log(res.data);
+      if (res.data.modifiedCount) {
+        toast.success("role updated to admin");
+        refetch();
+      }
+    });
+  };
   return (
     <div>
+      <Toaster />
       <div className="flex justify-evenly items-center">
         <h1 className="text-6xl"> All Users </h1>
-        <h1 className="text-6xl"> Total Users : {data.length}</h1>
+        <h1 className="text-6xl"> Total Users : {users.length}</h1>
       </div>
       <div className="overflow-x-auto mt-8">
         <table className="table">
@@ -57,27 +73,34 @@ const AllUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, idx) => {
+            {users.map((user, idx) => {
               return (
-                <tr key={item._id}>
+                <tr key={user._id}>
                   <td>{idx + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar">
-                        <h1>{item.name}</h1>
+                        <h1>{user.name}</h1>
                       </div>
                     </div>
                   </td>
-                  <td>{item.email}</td>
+                  <td>{user.email}</td>
                   <td>
-                    <button className="btn btn-sm text-red-500">
-                      <FaUsers></FaUsers>
-                    </button>
+                    {user.role === "admin" ? (
+                      "Admin"
+                    ) : (
+                      <button
+                        onClick={() => handleMakeAdmin(user._id)}
+                        className="btn btn-sm text-red-500"
+                      >
+                        <FaUsers></FaUsers>
+                      </button>
+                    )}
                   </td>
                   <th>
                     <button
                       onClick={() => {
-                        handleDelete(item._id);
+                        handleDelete(user._id);
                       }}
                       className="btn btn-sm text-red-500"
                     >
