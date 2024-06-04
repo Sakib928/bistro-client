@@ -11,6 +11,8 @@ import PrivateRoute from "./PrivateRoute";
 import AllUsers from "../pages/DashBoard/AllUsers/AllUsers";
 import AdminRoute from "./AdminRoute";
 import AddItems from "../pages/DashBoard/AddItems/AddItems";
+import AdminHome from "../pages/DashBoard/AdminHome/AdminHome";
+import ManageItems from "../pages/DashBoard/ManageItems/ManageItems";
 
 export const router = createBrowserRouter([
   {
@@ -63,13 +65,25 @@ export const router = createBrowserRouter([
           },
           {
             path: "adminHome",
-            element: <AdminRoute>uifhiuashuih</AdminRoute>,
+            element: (
+              <AdminRoute>
+                <AdminHome></AdminHome>
+              </AdminRoute>
+            ),
           },
           {
             path: "addItems",
             element: (
               <AdminRoute>
                 <AddItems />
+              </AdminRoute>
+            ),
+          },
+          {
+            path: "manageItems",
+            element: (
+              <AdminRoute>
+                <ManageItems></ManageItems>
               </AdminRoute>
             ),
           },

@@ -1,13 +1,47 @@
 import { useForm } from "react-hook-form";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import { FaUtensils } from "react-icons/fa";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import toast, { Toaster } from "react-hot-toast";
+
+const image_hosting_key = import.meta.env.VITE_IMAGE_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const AddItems = () => {
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+  const onSubmit = async (data) => {
     console.log(data);
+    // upload to imagebb and get the url
+    const imageFile = { image: data.image[0] };
+    const res = await axiosPublic.post(image_hosting_api, imageFile, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+    if (res.data.success) {
+      // time to send the rest of the form data
+      const menuItem = {
+        name: data.name,
+        category: data.category,
+        price: parseFloat(data.price),
+        recipe: data.recipe,
+        image: res.data.data.display_url,
+      };
+      // now send with admin access
+      const menuRes = await axiosSecure.post("/menu", menuItem);
+      console.log(menuRes.data);
+      if (menuRes.data.insertedId) {
+        toast.success("added item successfully");
+      } else {
+        toast.error("only admins can add item");
+      }
+    }
   };
   return (
     <div>
+      <Toaster />
       <SectionTitle
         heading={"add an item"}
         subHeading={"What's new?"}
@@ -35,10 +69,11 @@ const AddItems = () => {
                 <p className="label-text text-gray-50">Category</p>
                 <select
                   id="firstname"
+                  defaultValue={"default"}
                   {...register("category")}
                   className="select select-bordered w-full max-w-xs rounded-md  dark:text-gray-50 bg-[#121212] p-2"
                 >
-                  <option disabled selected>
+                  <option value="default" disabled>
                     Choose a category
                   </option>
                   <option value="salad">Salad</option>
@@ -81,7 +116,7 @@ const AddItems = () => {
               />
             </div>
           </fieldset>
-          <button className="btn" type="submit">
+          <button className="btn bg-[#121212]" type="submit">
             Add Item <FaUtensils></FaUtensils>
           </button>
         </form>
