@@ -18,7 +18,7 @@ const DashBoard = () => {
   return (
     <div className="flex">
       <div className="w-64 min-h-screen bg-orange-500">
-        <ul className="menu text-white font-bold text-lg">
+        <ul className="menu text-black font-medium text-lg">
           {isAdmin ? (
             <>
               <li>
@@ -70,8 +70,8 @@ const DashBoard = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to={"/dashboard/bookings"}>
-                  <FaList></FaList> My Bookings
+                <NavLink to={"/dashboard/paymentHistory"}>
+                  <FaList></FaList> Payment History
                 </NavLink>
               </li>
             </>
