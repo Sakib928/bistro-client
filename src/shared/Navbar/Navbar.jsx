@@ -4,9 +4,11 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { FaCartShopping } from "react-icons/fa6";
 import useCart from "../../hooks/useCart";
 import toast, { Toaster } from "react-hot-toast";
+import useAdmin from "../../hooks/useAdmin";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
+  const [isAdmin] = useAdmin();
   const [cart] = useCart();
   const handleLogout = () => {
     logOut().then(() => {
@@ -24,8 +26,18 @@ const Navbar = () => {
       <li>
         <NavLink to={"/order/salad"}>Order Food</NavLink>
       </li>
+      {user && isAdmin && (
+        <li>
+          <NavLink to={"/dashboard/adminHome"}>Dashboard</NavLink>
+        </li>
+      )}
+      {user && !isAdmin && (
+        <li>
+          <NavLink to={"/dashboard/home"}>Dashboard</NavLink>
+        </li>
+      )}
       <li>
-        <NavLink to={"/dashboard"}>
+        <NavLink to={"/dashboard/cart"}>
           {" "}
           <button className="flex gap-3">
             <FaCartShopping className="text-xl font-bold" />
